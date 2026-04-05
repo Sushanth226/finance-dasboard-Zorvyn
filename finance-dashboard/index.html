@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple Finance Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
+  <!-- chart.js used for the doughnut chart -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="app-container">
+    <header class="top-nav">
+      <h1>My Finance</h1>
+      
+      <div class="controls">
+        <input type="text" id="searchInput" aria-label="Search transactions" placeholder="Search category or date..." onkeyup="filterData()">
+        
+        <select id="roleSelect" aria-label="Select User Role" onchange="switchRole()">
+          <option value="admin">Admin</option>
+          <option value="viewer">Viewer</option>
+        </select>
+        
+        <button id="themeToggle" onclick="toggleDarkMode()">Dark Mode</button>
+      </div>
+    </header>
+
+    <main class="dashboard">
+      <!-- Top Cards -->
+      <section class="summary-cards">
+        <div class="card balance-card">
+          <h3>Total Balance</h3>
+          <h2 id="totalBalance">$0.00</h2>
+        </div>
+        <div class="card income-card">
+          <h3>Income</h3>
+          <h2 id="totalIncome">$0.00</h2>
+        </div>
+        <div class="card expense-card">
+          <h3>Expenses</h3>
+          <h2 id="totalExpense">$0.00</h2>
+        </div>
+      </section>
+
+      <section class="main-content">
+        <div class="left-col">
+          <!-- Chart section -->
+          <div class="card chart-container">
+            <h3>Visualizations</h3>
+            <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+              <div style="flex: 1; min-width: 200px; height: 250px;">
+                <h4 style="margin-top:0; color: #888; font-size: 13px;">Income vs Expenses</h4>
+                <canvas id="myChart"></canvas>
+              </div>
+              <div style="flex: 1; min-width: 200px; height: 250px;">
+                <h4 style="margin-top:0; color: #888; font-size: 13px;">Balance Trend</h4>
+                <canvas id="trendChart"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Insights -->
+          <div class="card insights-card">
+            <h3>Quick Insights 💡</h3>
+            <p id="highestCategory">Highest spending: --</p>
+            <p id="monthlyChange">Monthly Comparison: --</p>
+            <p class="highlight-text" id="observationMsg">Observation: --</p>
+          </div>
+        </div>
+
+        <div class="right-col">
+          <!-- Transactions -->
+          <div class="card transactions-card">
+            <div class="table-header">
+              <h3>Recent Transactions</h3>
+              <button id="addBtn" class="primary-btn" onclick="openModal()">+ Add New</button>
+            </div>
+            
+            <div style="overflow-x:auto;">
+              <table id="transactionsTable">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Category</th>
+                    <th>Type</th>
+                    <th>Amount</th>
+                    <th class="action-col">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="tableBody">
+                  <!-- Data gets inserted here from javascript -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Add Transaction Modal -->
+  <div id="addModal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeModal()">&times;</span>
+      <h2 style="margin-top: 0">Add New Transaction</h2>
+      <form id="addForm" onsubmit="submitTransaction(event)">
+        <div class="form-group">
+          <label for="tDate">Date</label>
+          <input type="date" id="tDate" required>
+        </div>
+        <div class="form-group">
+          <label for="tCategory">Category</label>
+          <input type="text" id="tCategory" placeholder="e.g. Groceries" required>
+        </div>
+        <div class="form-group">
+          <label for="tType">Type</label>
+          <select id="tType" name="tType">
+            <option value="expense">Expense</option>
+            <option value="income">Income</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="tAmount">Amount ($)</label>
+          <input type="number" id="tAmount" step="0.01" min="0.01" required>
+        </div>
+        <button type="submit" class="primary-btn" style="width: 100%; margin-top: 10px;">Save Transaction</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
